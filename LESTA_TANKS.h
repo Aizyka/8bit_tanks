@@ -26,7 +26,7 @@ public:
 	sf::Sprite GetSprite() const {
 		return sprite;
 	}
-	explicit ISprite(const std::string const path, const bool center = true) noexcept {
+	explicit ISprite(std::string const path, const bool center = true) noexcept {
 		texture.loadFromFile("../resources/images/"+path);
 		sprite.setTexture(texture, true);
 		sf::FloatRect spriteSize = sprite.getGlobalBounds();
