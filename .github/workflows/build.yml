@@ -27,6 +27,7 @@ jobs:
           sudo apt-get install libgl1-mesa-dev
           sudo apt-get install libudev-dev
           sudo apt-get install libopenal-dev
+          sudo apt-get install libvorbis-dev
           mkdir build
           cmake -S . -B build
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
