@@ -1,6 +1,6 @@
 #include "LESTA_TANKS.h"
 
-Player::Player() : sprite(new ISprite("tank.png", true)), pos(sf::Vector2i(400,600)), dir(0) {
+Player::Player() : sprite(make_unique<ISprite>("tank.png", true)) {
 	sprite->SetPosition(sf::Vector2f(pos));
 }
 
@@ -61,7 +61,7 @@ sf::Vector2i Player::GetPosition() const {
 	return pos;
 }
 
-sf::Sprite Player::GetSprite() {
+sf::Sprite Player::GetSprite() const {
     return sprite->GetSprite();
 }
 

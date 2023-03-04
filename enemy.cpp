@@ -1,7 +1,7 @@
 #include "LESTA_TANKS.h"
 #include <random>
 
-Enemy::Enemy(sf::Vector2i p) : health(100), pos(p), dir(2), sprite(new ISprite("enemy_tank.png", true)) {
+Enemy::Enemy(sf::Vector2i p) : pos(p), sprite(make_unique<ISprite>("enemy_tank.png", true)) {
     sprite->SetPosition(sf::Vector2f(pos));
 }
 
@@ -56,8 +56,8 @@ void Enemy::Update() {
     else {
         bool changed = false;
         std::default_random_engine generator;
-        std::uniform_int_distribution<int> distributionTime(0,300);
-        std::uniform_int_distribution<int> distributionDir(0,3);
+        std::uniform_int_distribution distributionTime(0,300);
+        std::uniform_int_distribution distributionDir(0,3);
         toChangeDir = (float)distributionTime(generator) / 100.0f;
         while (!changed) {
 
@@ -90,7 +90,7 @@ sf::Vector2i Enemy::GetPosition() const {
     return pos;
 }
 
-sf::Sprite Enemy::GetSprite() {
+sf::Sprite Enemy::GetSprite() const {
     return sprite->GetSprite();
 }
 

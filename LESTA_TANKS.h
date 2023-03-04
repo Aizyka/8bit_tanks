@@ -26,7 +26,7 @@ public:
 	sf::Sprite GetSprite() const {
 		return sprite;
 	}
-	explicit ISprite(std::string const path, const bool center = true) noexcept {
+	explicit ISprite(std::string const & path, const bool center = true) noexcept {
 		texture.loadFromFile("../resources/images/"+path);
 		sprite.setTexture(texture, true);
 		sf::FloatRect spriteSize = sprite.getGlobalBounds();
@@ -44,15 +44,15 @@ class Player {
 public:
 	Player();
 	void Update();
-	sf::Sprite GetSprite();
+	sf::Sprite GetSprite() const;
 	sf::Vector2i GetPosition() const;
     void GetDamage();
     void Reset();
 private:
 	int health = 100;
-    ISprite* sprite = nullptr;
-    sf::Vector2i pos;
-    int dir;
+    std::unique_ptr<ISprite> sprite = nullptr;
+    sf::Vector2i pos = sf::Vector2i(400,600);
+    int dir = 0;
     float toMove= 0.0f;
     float toShoot = 0.0f;
 };
@@ -61,14 +61,14 @@ class Enemy {
 public:
     explicit Enemy(sf::Vector2i p);
     void Update();
-    sf::Sprite GetSprite();
+    sf::Sprite GetSprite() const;
 	sf::Vector2i GetPosition() const;
     void GetDamage();
 private:
-    int health;
-    ISprite* sprite = nullptr;
+    int health = 100;
+    std::unique_ptr<ISprite> sprite = nullptr;
     sf::Vector2i pos;
-    int dir;
+    int dir = 2;
     float toMove= 0.0f;
     float toShoot = 0.0f;
     float toChangeDir = 0.0f;
@@ -78,13 +78,13 @@ class Obstacle {
 public:
 	Obstacle(sf::Vector2i pos, bool breakable);
 	sf::Vector2i GetPosition() const;
-	sf::Sprite GetSprite();
+	sf::Sprite GetSprite() const;
 	bool isBreakable() const;
 	void Break();
     void SetPosition(sf::Vector2i pos);
 	Obstacle() = default;
 private:
-	ISprite* sprite;
+    std::unique_ptr<ISprite> sprite;
 	bool canBreak;
     sf::Vector2i pos;
 };
@@ -119,7 +119,11 @@ public:
 float getDeltaTime();
 void AddProjectile(Projectile projectile);
 void RemoveProjectile(Projectile projectile);
-void RemoveEnemy(Enemy enemy);
+void RemoveEnemy(Enemy const & enemy);
 OBSTACLE CheckBounds(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE type);
 void SetString(const std::string& str);
 sf::Keyboard::Key GetKey();
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}

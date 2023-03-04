@@ -1,6 +1,6 @@
 #include "LESTA_TANKS.h"
 
-Obstacle::Obstacle(sf::Vector2i p, bool breakable) : pos(p), sprite(breakable == true ? new ISprite("box.png", true) : new ISprite("wall.png", true)), canBreak(breakable) {
+Obstacle::Obstacle(sf::Vector2i p, bool breakable) : pos(p), sprite(breakable == true ? make_unique<ISprite>("box.png", true) : make_unique<ISprite>("wall.png", true)), canBreak(breakable) {
 	sprite->SetPosition(sf::Vector2f(pos));
 }
 
@@ -22,6 +22,6 @@ sf::Vector2i Obstacle::GetPosition() const {
 	return pos;
 }
 
-sf::Sprite Obstacle::GetSprite() {
+sf::Sprite Obstacle::GetSprite() const {
 	return sprite->GetSprite();
 }

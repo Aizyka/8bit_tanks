@@ -51,7 +51,7 @@ void RemoveProjectile(Projectile projectile) {
     MainGame::mustbreakloop = true;
 }
 
-void RemoveEnemy(Enemy enemy) {
+void RemoveEnemy(Enemy const & enemy) {
     int pos = -1;
     for (int i = 0; i < MainGame::enemies.size(); i++) {
         if (enemy.GetPosition() == MainGame::enemies[i].GetPosition()) {
@@ -82,7 +82,7 @@ OBSTACLE CheckObstacles(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE
     return OBSTACLE::NOTHING;
 }
 
-OBSTACLE CheckProjectiles(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE type) {
+OBSTACLE CheckProjectiles(sf::Vector2i p, sf::Vector2i n) {
     int pos1 = -1;
     for (int i = 0; i < MainGame::projectiles.size(); i++) {
         sf::Vector2i pos = MainGame::projectiles[i].GetPosition();
@@ -106,7 +106,7 @@ OBSTACLE CheckProjectiles(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTAC
     return OBSTACLE::NOTHING;
 }
 
-OBSTACLE CheckPlayer(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE type) {
+OBSTACLE CheckPlayer(sf::Vector2i n, sf::Vector2i s, OBSTACLE type) {
     if(type != OBSTACLE::PLAYER) {
         sf::Vector2i pos = MainGame::player.GetPosition();
         int pos_diff_x = abs(n.x - pos.x);
@@ -148,9 +148,9 @@ OBSTACLE CheckBounds(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE ty
     }
     OBSTACLE status = CheckObstacles(p,n,s,type);
     if(status != OBSTACLE::NOTHING) return status;
-    status = CheckProjectiles(p,n,s,type);
+    status = CheckProjectiles(p,n);
     if(status != OBSTACLE::NOTHING) return status;
-    status = CheckPlayer(p,n,s,type);
+    status = CheckPlayer(n,s,type);
     if(status != OBSTACLE::NOTHING) return status;
     return CheckEnemies(p,n,s,type);
 }
@@ -193,14 +193,13 @@ void pollEvent(sf::RenderWindow& window) {
                 else if ((event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D) && find(MainGame::MainGame::activeKeys.begin(),MainGame::MainGame::activeKeys.end(),event.key.code) == MainGame::MainGame::activeKeys.end())
                         MainGame::MainGame::activeKeys.push_back(event.key.code);
                 break;
-            case sf::Event::KeyReleased:
-                if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D)
-                {
-                    auto pos = find(MainGame::MainGame::activeKeys.begin(),MainGame::MainGame::activeKeys.end(),event.key.code);
-                    if(pos != MainGame::MainGame::activeKeys.end())
-                        MainGame::MainGame::activeKeys.erase(pos);
-                }
+            case sf::Event::KeyReleased: {
+                auto pos = find(MainGame::MainGame::activeKeys.begin(), MainGame::MainGame::activeKeys.end(),
+                                event.key.code);
+                if (pos != MainGame::MainGame::activeKeys.end())
+                    MainGame::MainGame::activeKeys.erase(pos);
                 break;
+            }
             case sf::Event::Resized:
                 window.setSize(sf::Vector2u(800,800));
                 break;
