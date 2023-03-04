@@ -28,6 +28,16 @@ jobs:
           sudo apt-get install libudev-dev
           sudo apt-get install libopenal-dev
           sudo apt-get install libvorbis-dev
+          sudo apt-get install freetype-dev
+          sudo apt-get install x11-dev
+          sudo apt-get install xrandr-dev
+          sudo apt-get install opengl-dev
+          sudo apt-get install flac-dev
+          sudo apt-get install ogg-dev
+          sudo apt-get install vorbis-dev
+          sudo apt-get install vorbisenc-dev
+          sudo apt-get install vorbisfile-dev
+          sudo apt-get install pthread-dev
           mkdir build
           cmake -S . -B build
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
