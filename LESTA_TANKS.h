@@ -110,6 +110,7 @@ public:
     static Player player;
     static std::vector<Enemy> enemies;
     static std::vector<sf::Keyboard::Key> activeKeys;
+	static sf::Font font;
     static sf::Text text;
     static float newSpawn;
 };

@@ -9,6 +9,7 @@ std::vector<Enemy> MainGame::enemies = {};
 std::vector<Obstacle> MainGame::obstacles = {};
 std::vector<sf::Keyboard::Key> MainGame::MainGame::activeKeys = {};
 sf::Text MainGame::text;
+sf::Font MainGame::font;
 float MainGame::newSpawn = 3.0f;
 
 
@@ -155,15 +156,13 @@ OBSTACLE CheckBounds(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE ty
     return CheckEnemies(p,n,s,type);
 }
 
-sf::Font initText() {
-    sf::Font font;
-    font.loadFromFile("../resources/fonts/arial.ttf");
-    MainGame::text.setFont(font);
+void initText() {
+    MainGame::font.loadFromFile("../resources/fonts/arial.ttf");
+    MainGame::text.setFont(MainGame::font);
     MainGame::text.setCharacterSize(18);
     MainGame::text.setFillColor(sf::Color::Black);
     MainGame::text.setStyle(sf::Text::Bold);
     MainGame::text.setString("Health: 100");
-    return font;
 }
 
 void setup() {
@@ -257,7 +256,7 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "TANKI!");
     ISprite background("background.png", false);
-    sf::Font font = initText();
+    initText();
     setup();
 
 
