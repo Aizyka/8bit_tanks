@@ -35,8 +35,6 @@ jobs:
           sudo apt-get install libflac-dev
           sudo apt-get install libogg-dev
           sudo apt-get install libvorbis-dev
-          sudo apt-get install libvorbisenc-dev
-          sudo apt-get install libvorbisfile-dev
           sudo apt-get install libpthread-dev
           mkdir build
           cmake -S . -B build
