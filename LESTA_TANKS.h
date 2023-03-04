@@ -1,30 +1,32 @@
 ﻿#include <SFML/Graphics.hpp>
-#define PIXEL_SIZE 8
+#include <vector>
 
-typedef enum {
+constexpr int PIXEL_SIZE = 8;
+
+enum class OBSTACLE{
 	NOTHING,
 	END_OF_MAP,
 	WALL,
 	PROJECTILE,
 	PLAYER,
 	ENEMY
-} OBSTACLE;
+};
 
 class ISprite {
 public:
-	void SetPosition(const sf::Vector2f position) {
+	void SetPosition(const sf::Vector2f position) noexcept {
 		sprite.setPosition(position);
 	}
-	void SetRotation(const float angle) {
+	void SetRotation(const float angle) noexcept {
 		sprite.setRotation(angle);
 	}
-	void SetColor(const sf::Color color) {
+	void SetColor(const sf::Color color) noexcept {
 		sprite.setColor(color);
 	}
-	sf::Sprite GetSprite() {
+	sf::Sprite GetSprite() const {
 		return sprite;
 	}
-	explicit ISprite(const std::string path, const bool center = true) {
+	explicit ISprite(const std::string const path, const bool center = true) noexcept {
 		texture.loadFromFile("../resources/images/"+path);
 		sprite.setTexture(texture, true);
 		sf::FloatRect spriteSize = sprite.getGlobalBounds();
@@ -43,7 +45,7 @@ public:
 	Player();
 	void Update();
 	sf::Sprite GetSprite();
-	sf::Vector2i GetPosition();
+	sf::Vector2i GetPosition() const;
     void GetDamage();
     void Reset();
 private:
@@ -60,7 +62,7 @@ public:
     explicit Enemy(sf::Vector2i p);
     void Update();
     sf::Sprite GetSprite();
-	sf::Vector2i GetPosition();
+	sf::Vector2i GetPosition() const;
     void GetDamage();
 private:
     int health;
@@ -75,7 +77,7 @@ private:
 class Obstacle {
 public:
 	Obstacle(sf::Vector2i pos, bool breakable);
-	sf::Vector2i GetPosition();
+	sf::Vector2i GetPosition() const;
 	sf::Sprite GetSprite();
 	bool isBreakable() const;
 	void Break();
@@ -90,12 +92,26 @@ private:
 class Projectile {
 public:
 	Projectile(sf::Vector2i pos, int dir);
-	sf::Vector2i GetPosition();
+	sf::Vector2i GetPosition() const;
 	void Update();
 private:
     sf::Vector2i pos;
     sf::Vector2i mod;
 	float updateTime;
+};
+
+class MainGame {
+public:
+    static float deltaTime;
+    static bool mustbreakloop;
+    static std::vector<Projectile> projectiles;
+    static std::vector<ISprite> projectileSprites;
+    static std::vector<Obstacle> obstacles;
+    static Player player;
+    static std::vector<Enemy> enemies;
+    static std::vector<sf::Keyboard::Key> activeKeys;
+    static sf::Text text;
+    static float newSpawn;
 };
 
 
@@ -104,6 +120,6 @@ float getDeltaTime();
 void AddProjectile(Projectile projectile);
 void RemoveProjectile(Projectile projectile);
 void RemoveEnemy(Enemy enemy);
-int CheckBounds(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE type);
+OBSTACLE CheckBounds(sf::Vector2i p, sf::Vector2i n, sf::Vector2i s, OBSTACLE type);
 void SetString(const std::string& str);
 sf::Keyboard::Key GetKey();

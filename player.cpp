@@ -1,10 +1,7 @@
 #include "LESTA_TANKS.h"
 
-Player::Player() {
-	sprite = new ISprite("tank.png", true);
-    pos = sf::Vector2i(400,600);
+Player::Player() : sprite(new ISprite("tank.png", true)), pos(sf::Vector2i(400,600)), dir(0) {
 	sprite->SetPosition(sf::Vector2f(pos));
-	dir = 0;
 }
 
 void Player::Update() {
@@ -38,14 +35,12 @@ void Player::Update() {
                 break;
         }
 		if (new_x != pos.x || new_y != pos.y) {
-            if(sprite != nullptr)
-			    sprite->SetRotation(90.0f * (float)dir);
+            sprite->SetRotation(90.0f * (float)dir);
 			toMove = 0.1f;
-			if (CheckBounds(pos, sf::Vector2i(new_x, new_y), sf::Vector2i(PIXEL_SIZE*5, PIXEL_SIZE*5), PLAYER) == NOTHING)
+			if (CheckBounds(pos, sf::Vector2i(new_x, new_y), sf::Vector2i(PIXEL_SIZE*5, PIXEL_SIZE*5), OBSTACLE::PLAYER) == OBSTACLE::NOTHING)
 			{
 				pos.x = new_x; pos.y = new_y;
-                if(sprite != nullptr)
-				    sprite->SetPosition(sf::Vector2f(pos));
+                sprite->SetPosition(sf::Vector2f(pos));
 			}
 		}
 	}
@@ -62,7 +57,7 @@ void Player::Update() {
 	}
 }
 
-sf::Vector2i Player::GetPosition() {
+sf::Vector2i Player::GetPosition() const {
 	return pos;
 }
 
@@ -75,8 +70,7 @@ void Player::GetDamage() {
     SetString("Health: " + std::to_string(health));
     if(health <= 0) {
         pos = sf::Vector2i(-100,-100);
-        if(sprite != nullptr)
-            sprite->SetPosition(sf::Vector2f(pos));
+        sprite->SetPosition(sf::Vector2f(pos));
         SetString("GAME OVER\nPress 'R' to restart");
     }
 }
@@ -85,8 +79,6 @@ void Player::Reset() {
     health = 100;
     pos = sf::Vector2i(400, 600);
     dir = 0;
-    if (sprite != nullptr) {
-        sprite->SetPosition(sf::Vector2f(pos));
-        sprite->SetRotation(0);
-    }
+    sprite->SetPosition(sf::Vector2f(pos));
+    sprite->SetRotation(0);
 }

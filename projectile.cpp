@@ -30,9 +30,9 @@ void Projectile::Update() {
 		updateTime -= getDeltaTime();
 		return;
 	}
-    sf::Vector2i n(pos.x+mod.x*8,pos.y+mod.y*8);
-    if(CheckBounds(pos, n, sf::Vector2i(1, 1), PROJECTILE) == NOTHING) {
-        pos = n;
+    sf::Vector2i newPos(pos.x+mod.x*8,pos.y+mod.y*8);
+    if(CheckBounds(pos, newPos, sf::Vector2i(1, 1), OBSTACLE::PROJECTILE) == OBSTACLE::NOTHING) {
+        pos = newPos;
     }
     else {
         RemoveProjectile(*this);
@@ -41,6 +41,6 @@ void Projectile::Update() {
 	updateTime = 0.05f;
 }
 
-sf::Vector2i Projectile::GetPosition() {
+sf::Vector2i Projectile::GetPosition() const {
 	return pos;
 }

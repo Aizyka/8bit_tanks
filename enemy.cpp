@@ -1,11 +1,8 @@
 #include "LESTA_TANKS.h"
+#include <random>
 
-Enemy::Enemy(sf::Vector2i p) {
-    pos = p;
-    health = 100;
-    sprite = new ISprite("enemy_tank.png", true);
+Enemy::Enemy(sf::Vector2i p) : health(100), pos(p), dir(2), sprite(new ISprite("enemy_tank.png", true)) {
     sprite->SetPosition(sf::Vector2f(pos));
-    dir = 2;
 }
 
 void Enemy::Update() {
@@ -30,12 +27,14 @@ void Enemy::Update() {
             case 3:
                 n.x -= PIXEL_SIZE;
                 break;
+            default:
+                break;
         }
         if (n.x != pos.x || n.y != pos.y) {
 
             sprite->SetRotation(90.0f * (float)dir);
             toMove = 0.1f;
-            if (CheckBounds(pos,n, sf::Vector2i(PIXEL_SIZE*5, PIXEL_SIZE*5), ENEMY) == NOTHING)
+            if (CheckBounds(pos,n, sf::Vector2i(PIXEL_SIZE*5, PIXEL_SIZE*5), OBSTACLE::ENEMY) == OBSTACLE::NOTHING)
             {
                 pos = sf::Vector2i(n);
                 sprite->SetPosition(sf::Vector2f(pos));
@@ -56,9 +55,13 @@ void Enemy::Update() {
     }
     else {
         bool changed = false;
-        toChangeDir = ((float)(rand() % 300) / 100.0f);
+        std::default_random_engine generator;
+        std::uniform_int_distribution<float> distributionTime(0.0f,3.0f);
+        std::uniform_int_distribution<int> distributionDir(0,3);
+        toChangeDir = distributionTime(generator);
         while (!changed) {
-            dir = rand() % 4;
+
+            dir = distributionDir(generator);
             sf::Vector2i n = pos;
             switch (dir) {
                 case 0:
@@ -73,65 +76,17 @@ void Enemy::Update() {
                 case 3:
                     n.x -= PIXEL_SIZE;
                     break;
+                default:
+                    break;
             }
-            int cb = CheckBounds(pos,n, sf::Vector2i(PIXEL_SIZE*5, PIXEL_SIZE*5), ENEMY);
-            if(cb != END_OF_MAP && cb != WALL)
+            OBSTACLE cb = CheckBounds(pos,n, sf::Vector2i(PIXEL_SIZE*5, PIXEL_SIZE*5), OBSTACLE::ENEMY);
+            if(cb != OBSTACLE::END_OF_MAP && cb != OBSTACLE::WALL)
                 changed = true;
         }
-        //CheckDir();
     }
 }
 
-/*void Enemy::CheckDir() {
-    bool found = false;
-    int cb = 0;
-    switch (dir) {
-        case 0:
-            for(int i = pos.y; i > 0; i-=PIXEL_SIZE) {
-                cb = CheckBounds(pos,sf::Vector2i(pos.x,i),sf::Vector2i(1,1),ENEMY);
-                if(cb > 1) {
-                    found = true;
-                    break;
-                }
-            }
-            break;
-        case 1:
-            for(int i = pos.x; i < 800; i+=PIXEL_SIZE) {
-                cb = CheckBounds(pos,sf::Vector2i(i,pos.y),sf::Vector2i(1,1),ENEMY);
-                if(cb > 1) {
-                    found = true;
-                    break;
-                }
-            }
-            break;
-        case 2:
-            for(int i = pos.y; i < 800; i+=PIXEL_SIZE) {
-                cb = CheckBounds(pos,sf::Vector2i(pos.x,i),sf::Vector2i(1,1),ENEMY);
-                if(cb > 1) {
-                    found = true;
-                    break;
-                }
-            }
-            break;
-        case 3:
-            for(int i = pos.x; i > 0; i-=PIXEL_SIZE) {
-                cb = CheckBounds(pos,sf::Vector2i(i,pos.y),sf::Vector2i(1,1),ENEMY);
-                if(cb > 1) {
-                    found = true;
-                    break;
-                }
-            }
-            break;
-    }
-    if(found && (cb == WALL || cb == PLAYER))
-    {
-        needShot = true;
-        Projectile projectile(pos, dir, true);
-        toShoot = 0.5f;
-    }
-}*/
-
-sf::Vector2i Enemy::GetPosition() {
+sf::Vector2i Enemy::GetPosition() const {
     return pos;
 }
 
