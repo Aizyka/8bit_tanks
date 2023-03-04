@@ -56,9 +56,9 @@ void Enemy::Update() {
     else {
         bool changed = false;
         std::default_random_engine generator;
-        std::uniform_int_distribution<float> distributionTime(0.0f,3.0f);
+        std::uniform_int_distribution<int> distributionTime(0,300);
         std::uniform_int_distribution<int> distributionDir(0,3);
-        toChangeDir = distributionTime(generator);
+        toChangeDir = (float)distributionTime(generator) / 100.0f;
         while (!changed) {
 
             dir = distributionDir(generator);
