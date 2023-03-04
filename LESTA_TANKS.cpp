@@ -33,7 +33,7 @@ float getDeltaTime() {
 void AddProjectile(Projectile projectile) {
     ISprite sprite("projectile.png",true);
     sprite.SetColor(sf::Color::Black);
-    MainGame::projectileSprites.push_back(std::move(sprite));
+    MainGame::projectileSprites.push_back(sprite);
     MainGame::projectiles.push_back(projectile);
 }
 

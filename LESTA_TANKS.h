@@ -35,16 +35,6 @@ public:
 		sprite.setScale(sf::Vector2f(10, 10));
 	}
 	ISprite() = default;
-    ISprite(ISprite&& other) noexcept // Move constructor
-            : texture(std::move(other.texture)), sprite(std::move(other.sprite)) {}
-    ISprite& operator=(ISprite&& other) noexcept // Move assignment operator
-    {
-        if (this != &other) {
-            texture = std::move(other.texture);
-            sprite = std::move(other.sprite);
-        }
-        return *this;
-    }
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
