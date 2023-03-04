@@ -33,7 +33,7 @@ float getDeltaTime() {
 void AddProjectile(Projectile projectile) {
     ISprite sprite("projectile.png",true);
     sprite.SetColor(sf::Color::Black);
-    MainGame::projectileSprites.push_back(sprite);
+    MainGame::projectileSprites.push_back(std::move(sprite));
     MainGame::projectiles.push_back(projectile);
 }
 
@@ -193,13 +193,12 @@ void pollEvent(sf::RenderWindow& window) {
                 else if ((event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::D) && find(MainGame::MainGame::activeKeys.begin(),MainGame::MainGame::activeKeys.end(),event.key.code) == MainGame::MainGame::activeKeys.end())
                         MainGame::MainGame::activeKeys.push_back(event.key.code);
                 break;
-            case sf::Event::KeyReleased: {
-                auto pos = find(MainGame::MainGame::activeKeys.begin(), MainGame::MainGame::activeKeys.end(),
-                                event.key.code);
-                if (pos != MainGame::MainGame::activeKeys.end())
+            case sf::Event::KeyReleased:
+
+                if (auto pos = find(MainGame::MainGame::activeKeys.begin(), MainGame::MainGame::activeKeys.end(),
+                                    event.key.code); pos != MainGame::MainGame::activeKeys.end())
                     MainGame::MainGame::activeKeys.erase(pos);
                 break;
-            }
             case sf::Event::Resized:
                 window.setSize(sf::Vector2u(800,800));
                 break;
@@ -230,7 +229,7 @@ void update(sf::RenderWindow& window) {
         MainGame::projectileSprites[i].SetPosition(sf::Vector2f(MainGame::projectiles[i].GetPosition()));
         window.draw(MainGame::projectileSprites[i].GetSprite());
     }
-    for (auto & obstacle : MainGame::obstacles) {
+    for (const auto & obstacle : MainGame::obstacles) {
         window.draw(obstacle.GetSprite());
     }
     window.draw(MainGame::text);

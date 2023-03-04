@@ -30,8 +30,7 @@ void Projectile::Update() {
 		updateTime -= getDeltaTime();
 		return;
 	}
-    sf::Vector2i newPos(pos.x+mod.x*8,pos.y+mod.y*8);
-    if(CheckBounds(pos, newPos, sf::Vector2i(1, 1), OBSTACLE::PROJECTILE) == OBSTACLE::NOTHING) {
+    if(sf::Vector2i newPos(pos.x+mod.x*8,pos.y+mod.y*8); CheckBounds(pos, newPos, sf::Vector2i(1, 1), OBSTACLE::PROJECTILE) == OBSTACLE::NOTHING) {
         pos = newPos;
     }
     else {

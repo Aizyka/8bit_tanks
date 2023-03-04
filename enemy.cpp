@@ -1,7 +1,7 @@
 #include "LESTA_TANKS.h"
 #include <random>
 
-Enemy::Enemy(sf::Vector2i p) : pos(p), sprite(make_unique<ISprite>("enemy_tank.png", true)) {
+Enemy::Enemy(sf::Vector2i p) : sprite(make_unique<ISprite>("enemy_tank.png", true)), pos(p) {
     sprite->SetPosition(sf::Vector2f(pos));
 }
 

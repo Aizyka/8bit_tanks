@@ -35,6 +35,16 @@ public:
 		sprite.setScale(sf::Vector2f(10, 10));
 	}
 	ISprite() = default;
+    ISprite(ISprite&& other) noexcept // Move constructor
+            : texture(std::move(other.texture)), sprite(std::move(other.sprite)) {}
+    ISprite& operator=(ISprite&& other) noexcept // Move assignment operator
+    {
+        if (this != &other) {
+            texture = std::move(other.texture);
+            sprite = std::move(other.sprite);
+        }
+        return *this;
+    }
 private:
 	sf::Texture texture;
 	sf::Sprite sprite;
@@ -125,5 +135,5 @@ void SetString(const std::string& str);
 sf::Keyboard::Key GetKey();
 template<typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    return std::make_unique<T>(std::forward<Args>(args)...);
 }
